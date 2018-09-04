@@ -1,4 +1,6 @@
 import {view} from "../view.js"
+import {model} from "../model.js"
+import {transpose, csvParse} from "./matrix.js"
 
 "use strict"
 
@@ -26,46 +28,26 @@ class Table{
   }
 }
 
-const transpose = A=>A[0].map((k,i)=>A.map((v)=>v[i]))
-const csvParse = csv => csv
-  .split(/\r\n|\n|\r/) //split by line feed codes
-  .filter((k)=>k.match(/[^,\s\f\n\r\t\v]/)) //remove empty lines
-  .map(k=>k.trim() //remove white spaces of begining and end of line
-    .replace(/,\s+/g,",") //remove white spaces
-    .split(",") //split by cannma
-    .map((l)=>isNaN(l)? l:parseFloat(l)) //convert string to flot
-    )
 
 export const plot ={
   table:null,
-  initialPlot:function(){
-
-    const initialData = 
-      `target [-], value 0 [-] \n
-        0,0 \n 1,1 \n 2,2\n
-      `
-    const data = this.parseData(initialData)
-
-    this.plotData(data.labels, data.values,200, 250)
-  },
   parseData:function(csv){
     const data = csvParse(csv)
     const labels = data[0]
-    const values = transpose(data.slice(1))
+    const dataset = data.slice(1)
     return {
       labels: labels,
-      values: values,
+      dataset: dataset,
     }
   },
-  plotData:function(labels, values,height, width){
+  plotData:function(labels, dataset, height, width){
     if(this.table){
       this.table.element.remove() 
       this.table =null
     }
 
     const table = new Table(labels.length)
-    view.elements.draw.appendChild(table.element)
-
+    const values = transpose(dataset)
     labels.forEach((v,i,arr)=>{
       arr.forEach((u,j)=>{
         if(i===j){
@@ -84,13 +66,14 @@ export const plot ={
         }
       }) 
     })
+    view.elements.draw.appendChild(table.element)
     this.table = table
   },
   plotScatter:function(elem, x, y,  xlabel, ylabel,height,width){
      const trace1 = {
       x: x ,
       y: y ,
-      marker: {size: 8}, 
+      marker: {size: 5}, 
       mode: 'markers', 
       name: 'sample', 
       type: 'scatter', 
@@ -102,6 +85,7 @@ export const plot ={
       height: height, 
       title: false, 
       width: width, 
+      showlegend:false,
       xaxis: {
         autorange: true, 
         title: xlabel, 
@@ -130,6 +114,87 @@ export const plot ={
       }
     )
   },
+  plotPointAndLine:function(point){
+    const samplingN = 101
+    const values = model.values
+    const regression = model.regression
+
+    const valIncUserInput = values.map((v,i)=>v.concat(point[i]))
+    const minMax = valIncUserInput.map(v=>[Math.min(...v), Math.max(...v)]) 
+    const sampleSet = minMax.map(
+        v=>[...Array(samplingN)].map(
+          (u,j)=>v[0]+(v[1]-v[0])*j/samplingN
+        )
+      )
+    const predictedPoint = regression.predict(point)[0]//regression.predict([point])[0]
+    //const predictedPoint = regression.predict([point])[0]
+    console.log(predictedPoint) 
+    const points = point.map(v=>Object({x:v, y:predictedPoint}))
+    const lines = sampleSet.map((v,i)=>{
+        const x = v.map(u=>point.map((w,k)=>i===k?u:w))
+        const y = x.map(v=>regression.predict(v)[0])//regression.predict(x)
+     //   const y = regression.predict(x)
+        return {
+          x: x.map(u=>u[i]),
+          y: y,
+        }
+      })
+    plot.update(points, lines)
+  },
+  update:function(points, lines){
+    const table = this.table
+    const list = [].concat({},points)
+    list.forEach((v,i,arr)=>{
+      arr.forEach((u,j)=>{
+        if(i!=j){
+          const cell = table.getCell(i,j) 
+          const x = j>0?[u.x] : [v.y]
+          const y = i>0?[v.x] : [u.y]
+          const lineX = i==0 && j>0 ? lines[j-1].x: 
+            i>0 && j===0 ?lines[i-1].y:
+            null
+          const lineY = i==0 && j>0 ? lines[j-1].y:
+            i>0 && j===0 ?lines[i-1].x:
+            null
+          plot.updateScatter(cell,x,y, lineX, lineY)
+        }
+      })
+    })
+  },
+  updateScatter:function(elem,x,y,lineX,lineY){
+     const trace1 = {
+      x: x ,
+      y: y ,
+      marker: {size: 5,color:"red"}, 
+      mode: 'markers', 
+      name: 'sample', 
+      type: 'scatter', 
+    };
+    const trace2 = {
+      x: lineX ,
+      y: lineY ,
+      marker: {size: 5,color:"red"}, 
+      mode: 'lines', 
+      name: 'sample', 
+      type: 'scatter', 
+    };
+    if(lineX && lineY){
+      const data = [trace1,trace2];
+      if(elem.data.length>2){
+        Plotly.deleteTraces(elem, [1,2])
+      }
+      Plotly.addTraces(elem, data,[1,2])
+    }
+    else{
+      const data = [trace1];
+      if(elem.data.length>1){
+        Plotly.deleteTraces(elem, [1])
+      }
+      Plotly.addTraces(elem, data,[1])
+    }
+
+
+  },
   plotHistogram:function(elem, x,xlabel,height,width){
     const trace = {
       x:x,
@@ -154,7 +219,6 @@ export const plot ={
         pad:0,
       },
     };
-
     Plotly.newPlot(elem,data, layout,{
        // editable: true,
         displayModeBar:false,
