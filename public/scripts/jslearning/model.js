@@ -4,11 +4,15 @@ import {plot} from "./modules/plot.js"
 import {learning} from "./modules/learning.js"
 import {csvParse,transpose} from "./modules/matrix.js"
 import {importFiles} from "../filereader/index.js"
+import {saveAs} from "../file-saver/FileSaver.js"
+
 "use strict"
 
 export const model ={
   values:null,
   regression:null,
+  method: "linear",
+  minMax:null,
   initialize: function(){
 
     const labels =  ["target[-]", "value0[-]", "value1[-]", "value2[-]"]
@@ -40,18 +44,26 @@ export const model ={
       [192, 96, 93, 95],
     ]
 
-    model.set(labels, dataset)
+    model.set(labels, dataset,"linear")
   },
-  set:function(labels, dataset){
+  set:function(labels, dataset, method){
     const dataT = transpose(dataset)
     const values =  dataT.slice(1)
-    this.values = values
+    this.method = method
     plot.plotData(labels, dataset, 200, 250)
-   
+
+    const minMax = values.map(v=>[Math.min(...v), Math.max(...v)]) 
+    this.minMax = minMax
+    this.labels = labels
+    this.dataset = dataset
+
     const predictions = dataT[0]
     const trainingSet = transpose(values)
-    //const regression = learning.randomForestRegression(trainingSet, predictions)
-    const regression = learning.multivariateLinearRegression(trainingSet, predictions)
+    const regressionMethod = learning.method.get(method)
+    const regression = regressionMethod(trainingSet, predictions)
+
+    this.predictions = predictions
+    this.trainingSet = trainingSet 
     this.regression = regression
 
     const point = trainingSet[0]
@@ -60,16 +72,54 @@ export const model ={
 
     plot.plotPointAndLine(point)
   },
+  changeMethod: function(method){
+    const predictions = this.predictions 
+    const trainingSet = this.trainingSet
+  
+    const regressionMethod = learning.method.get(method)
+    const regression = regressionMethod(trainingSet, predictions)
+    this.method = method
+    this.regression = regression
+
+    const point = table.getPoint()
+ 
+    table.changeMethod(method)
+
+    plot.plotPointAndLine(point)
+  
+  },
   import:{
     execute:function(){
       const element = view.elements.importFile 
       const text = []
+      const method = model.method
       importFiles(element,text,()=>{
         const data = plot.parseData(text[0].text)   
         const labels = data.labels
         const dataset= data.dataset
-        model.set(labels, dataset)
+        model.set(labels, dataset,method)
       });
     }
- }
+  },
+  export:{
+    execute:function(){
+      const modelJSON = model.regression.toJSON()
+      console.log(modelJSON)
+      const exportText = JSON.stringify(modelJSON,null, "  ")
+      const filename = "jslearning.model.json"
+      const exportFileBOM = true
+      const blob = new Blob([exportText], {type: 'text/plain; charset=utf-8'});
+      saveAs(blob, filename,exportFileBOM);
+    },
+  },
+  submit: {
+    execute: function(){
+      const text = view.elements.method.value 
+      console.log(text)
+      if(text===model.method){
+        return
+      }
+      model.changeMethod(text)
+    }
+  }
 }

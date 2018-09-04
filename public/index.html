@@ -25,7 +25,8 @@
         <a>import CSV</a>
         <input id="importFile" type="file" name="files"  style="display:none;">
       </li>
-      <li id="export">export JSON</li>
+      <li id="export">export Model</li>
+      <li id="option">option</li>
     </ul>
   </header>
   <main>
@@ -38,5 +39,15 @@
       </div>
     </article>
   </main>
+  <article id="optionArea" style="display:none;">
+    <p>Method</p>
+    <form name="option">
+      <select name="method">
+        <option value="linear" selected>linear</option>
+        <option value="random-forest">random forest</option>
+      </select>
+    </form>
+    <div id="submit" class="submit">submit</div>
+  </article>
 </body>
 </html>
