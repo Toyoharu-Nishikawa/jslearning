@@ -7,6 +7,7 @@
   <link rel="stylesheet" type="text/css" href="./styles/index.css">
   <link rel="stylesheet" type="text/css" href="./styles/tabulator/tabulator.min.css">
   <link rel="stylesheet" type="text/css" href="./styles/jquery/jquery-ui.min.css">
+  <script defer src="./scripts/ml/ml.js"></script>
   <script defer src="./scripts/jquery/jquery-3.3.1.min.js"></script>
   <script defer src="./scripts/jquery/jquery-ui.min.js"></script>
   <script defer src="./scripts/tabulator/tabulator.min.js"></script>
@@ -17,22 +18,17 @@
   <header>
     <div class="title">
       <h1>jslearning</h1>
+      <img src="./images/robots.svg">
     </div>
     <ul>
       <li id="import">
-        <a>import</a>
+        <a>import CSV</a>
         <input id="importFile" type="file" name="files"  style="display:none;">
       </li>
-      <li id="export">export</li>
+      <li id="export">export JSON</li>
     </ul>
   </header>
   <main>
-    <aside>
-      <ul> 
-        <li>full screen</li>
-        <li>picture</li>
-      </ul>
-    </aside>
     <article>
       <div class="table">
         <div id="table"></div>
@@ -42,8 +38,5 @@
       </div>
     </article>
   </main>
-  <footer>
-    <small>Copyright August 2018 jslearning assosiation</small>
-  </footer>
 </body>
 </html>
