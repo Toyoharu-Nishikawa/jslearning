@@ -8,5 +8,9 @@ export const view = {
     export: document.getElementById("export"),
     table: document.getElementById("table"),
     draw: document.getElementById("draw"),
+    option: document.getElementById("option"),
+    optionArea: document.getElementById("optionArea"),
+    submit: document.getElementById("submit"),
+    method: document.forms.option.method,
   }
 }

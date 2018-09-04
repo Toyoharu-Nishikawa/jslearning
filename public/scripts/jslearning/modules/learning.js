@@ -1,6 +1,9 @@
+import {model} from "../model.js"
+
 "use strict"
 
 export const learning = {
+  method:new Map(),
   randomForestRegression:function(trainingSet, predictions){
     const options = {
       seed: 3,
@@ -8,8 +11,6 @@ export const learning = {
       replacement: false,
       nEstimators: 200
     }
-    console.log(predictions)
-    console.log(trainingSet)
     const regression = new ML.RandomForestRegression(options)
     regression.train(trainingSet, predictions)
     return regression
@@ -19,4 +20,16 @@ export const learning = {
     const regression = new ML.MultivariateLinearRegression(trainingSet,y)
     return regression
   },
+  predict:function(point){
+    const regression = model.regression 
+    const method = model.method
+    const result = 
+      method ==="linear" ? regression.predict(point)[0]:
+      method ==="random-forest" ? regression.predict([point])[0]:
+      regression.predict(point)[0]
+    return result 
+  }
 }
+
+learning.method.set("linear", learning.multivariateLinearRegression)
+learning.method.set("random-forest", learning.randomForestRegression)

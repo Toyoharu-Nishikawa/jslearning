@@ -1,23 +1,44 @@
-import {model} from "../model.js"
+import {learning} from "./learning.js"
 import {plot} from "./plot.js"
 
 "use strict"
 export const table={
+  point: null,
   cellEdit: function(e){
-    console.log("e",e)  
+    const predict = learning.predict
     const list = e.getRow().getCells().map(v=>v.getValue())
     const point = list.slice(1,-1).map(parseFloat)
 
-    const regression = model.regression
-    const y = regression.predict([point])[0]
-    console.log(y)
+    const y = predict(point)
     e.getRow().getCell("target").setValue(y)
     plot.plotPointAndLine(point)
 
   },
+  getPoint:function(){
+    const cells = $("#table").tabulator("getData")
+    const list = cells[0]
+    const keys = Object.keys(list)
+      .filter(v=>v.includes("value"))
+      .sort((u, v)=>{
+          const a = parseInt(u.split("value")[1])
+          const b = parseInt(v.split("value")[1])
+          const flag = a < b ? -1: 1
+          return flag
+        })
+    const point = keys.map(v=>list[v])
+    this.point = point
+    return point
+  },
+  changeMethod:function(){
+    const point = this.point
+    const predict = learning.predict
+    const y = predict(point)
+ 
+    $("#table").tabulator("updateData",[{id:0, target:y}] )
+  },
   setTable:function(labels, point){
-    const regression = model.regression
-    const y = regression.predict([point])[0]
+    const predict = learning.predict
+    const y = predict(point)
     if($("#table").tabulator()){
         $("#table").tabulator("destroy")
     }

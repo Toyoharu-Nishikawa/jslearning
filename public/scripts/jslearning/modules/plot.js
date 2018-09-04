@@ -1,5 +1,6 @@
 import {view} from "../view.js"
 import {model} from "../model.js"
+import {learning} from "./learning.js"
 import {transpose, csvParse} from "./matrix.js"
 
 "use strict"
@@ -116,24 +117,23 @@ export const plot ={
   },
   plotPointAndLine:function(point){
     const samplingN = 101
-    const values = model.values
-    const regression = model.regression
+    const minMax = model.minMax
+    const predict = learning.predict 
 
-    const valIncUserInput = values.map((v,i)=>v.concat(point[i]))
-    const minMax = valIncUserInput.map(v=>[Math.min(...v), Math.max(...v)]) 
-    const sampleSet = minMax.map(
+    const minMaxIncUserInput = minMax.map((v,i)=>[Math.min(v[0], point[i]), Math.max(v[1], point[i])]) 
+
+    const sampleSet = minMaxIncUserInput.map(
         v=>[...Array(samplingN)].map(
           (u,j)=>v[0]+(v[1]-v[0])*j/samplingN
         )
       )
-    const predictedPoint = regression.predict(point)[0]//regression.predict([point])[0]
-    //const predictedPoint = regression.predict([point])[0]
+    console.log(minMaxIncUserInput,point)
+    const predictedPoint = predict(point)
     console.log(predictedPoint) 
     const points = point.map(v=>Object({x:v, y:predictedPoint}))
     const lines = sampleSet.map((v,i)=>{
         const x = v.map(u=>point.map((w,k)=>i===k?u:w))
-        const y = x.map(v=>regression.predict(v)[0])//regression.predict(x)
-     //   const y = regression.predict(x)
+        const y = x.map(predict)
         return {
           x: x.map(u=>u[i]),
           y: y,

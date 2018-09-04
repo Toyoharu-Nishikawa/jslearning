@@ -15,6 +15,7 @@ header {
   margin: 0;
   padding: 0;
   border-bottom: 2px solid #EEEEEE;
+  position:relative;
 }
 
 header > div {
@@ -36,7 +37,6 @@ header > ul  {
 }
 header > ul > li {
   color: #3e5358;
-  border-radius: 1px;
   border: 1px solid #1495b5;
   border-radius: 6px 6px 6px 6px;
   margin: 10px 20px 10px 50px;
@@ -106,6 +106,49 @@ main > article > div.draw{
   margin:0;
   padding:0;
 }
+
+#optionArea {
+  background:#FFFFFE;
+  position:absolute;
+  left: 400px;
+  top: 200px;
+  width: 200px;
+  height: 200px;
+  border: 1px solid #1495b5;
+  border-radius: 10px;
+  padding: 10px 10px 10px 10px;
+}
+
+#optionArea >p {
+  color: #3e5358;
+  margin:0 3px;
+} 
+
+#optionArea >form {
+  color: #3e5358;
+  margin:0 3px;
+}
+
+#optionArea >div.submit {
+  font-size: 11pt;
+  color: #3e5358;
+  margin:10px 0px;
+  border: 1px solid #1495b5;
+  border-radius: 6px;
+  padding: 2px 5px;
+  width: 70px;
+  user-select:none;
+  position:absolute;
+  bottom: 10px;
+  text-align:center;
+}
+#optionArea >div.submit:hover {
+  background: #1495b5;
+  color: #F5FFFA;
+  transition: 1.2s;
+  cursor: pointer;
+}
+
 footer{
   display: flex;
   background: #EEEEEE;
