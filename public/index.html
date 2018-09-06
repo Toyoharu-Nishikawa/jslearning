@@ -44,10 +44,46 @@
     <form name="option">
       <select name="method">
         <option value="linear" selected>linear</option>
+        <option value="polynominal">polynominal</option>
         <option value="random-forest">random forest</option>
       </select>
     </form>
+    <div id="optionTable"></div>
     <div id="submit" class="submit">submit</div>
   </article>
+
+  <template id="polynominalTemp">
+    <section class="polynominalTable">
+      <table>
+        <thead>
+          <tr>
+            <th>variables</th>
+            <th>degrees</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody> 
+      </table>
+    </section>
+  </template>
+
+  <template id="polynominalTableBody">
+    <tr>
+      <td>value0</td>
+      <td>
+        <form>
+          <select>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </form>
+      </td>
+    </tr>
+  </template>
+
+
+
 </body>
 </html>
