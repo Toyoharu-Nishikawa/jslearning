@@ -12,5 +12,8 @@ export const view = {
     optionArea: document.getElementById("optionArea"),
     submit: document.getElementById("submit"),
     method: document.forms.option.method,
+    optionTable: document.getElementById("optionTable"),
+    polynominalTem: document.getElementById("polynominaTem"),
+    polynominalTableBody: document.getElementById("polynominaTableBody"),
   }
 }

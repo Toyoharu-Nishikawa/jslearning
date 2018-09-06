@@ -8,11 +8,23 @@ import {saveAs} from "../file-saver/FileSaver.js"
 
 "use strict"
 
+const randomForestInitalOption = {
+  seed: 3,
+  maxFeatures: 2,
+  replacement: false,
+  nEstimators: 200
+}
+const polynominalInitialOption = [3, 3, 3]
+
 export const model ={
   values:null,
   regression:null,
   method: "linear",
   minMax:null,
+  options:new Map([
+    ["random-forest", randomForestInitalOption],
+    ["polynominal", polynominalInitialOption],
+  ]),
   initialize: function(){
 
     const labels =  ["target[-]", "value0[-]", "value1[-]", "value2[-]"]
@@ -97,6 +109,9 @@ export const model ={
         const data = plot.parseData(text[0].text)   
         const labels = data.labels
         const dataset= data.dataset
+        const valueLength = dataset[0].length-1
+        const polynominalParameterList = [...Array(valueLength)].fill(3)
+        model.options.set("polynominal", polynominalParameterList)
         model.set(labels, dataset,method)
       });
     }
@@ -111,6 +126,35 @@ export const model ={
       const blob = new Blob([exportText], {type: 'text/plain; charset=utf-8'});
       saveAs(blob, filename,exportFileBOM);
     },
+  },
+  change:{
+    execute:function(){
+      const text = view.elements.method.value 
+      switch(text){
+        case "linear":{
+          this.linear()
+          break
+        }
+        case "polynominal":{
+          this.polynominal()
+          break
+        }
+        case "random-forest":{
+          this.randomforest()
+          break
+        }
+        default: {
+        }
+      }
+    },
+    linear:function(){
+      view.elements.optionTable.innerHTML =""
+    },
+    polynominal:function(){
+       
+    },
+    randomforest:function(){
+    }
   },
   submit: {
     execute: function(){
