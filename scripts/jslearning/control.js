@@ -37,12 +37,20 @@ export const control = {
       view.elements.optionArea.onclick=this.optionAreaClick
     },
   },
-  change:{
+  optionChange:{
     execute:function(){
-      model.change.execute()
+      model.optionChange.execute()
     },
     add:function(){
       view.elements.method.onchange = this.execute
+    },
+  },
+  importJSFile:{
+    execute:function(){
+      model.importJSFile.execute()
+    },
+    add:function(){
+      view.elements.importUserFileLabel.onclick=this.execute
     },
   },
   submit:{
@@ -59,7 +67,8 @@ export const control = {
       this.import,
       this.export,
       this.option,
-      this.change,
+      this.optionChange,
+      this.importJSFile,
       this.submit,
     ] 
     controls.forEach(control =>control.add())

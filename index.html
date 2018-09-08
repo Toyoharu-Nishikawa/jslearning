@@ -27,6 +27,9 @@
       </li>
       <li id="export">export Model</li>
       <li id="option">option</li>
+      <li id="help" class="help">
+        <a href="./help.html" target="_blank"><img src="./images/help.svg"></a>
+      </li>
     </ul>
   </header>
   <main>
@@ -46,9 +49,23 @@
         <option value="linear" selected>linear</option>
         <option value="polynominal">polynominal</option>
         <option value="random-forest">random forest</option>
+        <option value="user-function">user function</option>
       </select>
     </form>
-    <div id="optionTable"></div>
+    <div id="optionTable">
+      <div class="linearOption" id="linearOption" style="display:block"></div>
+      <div id="polynominalOption"style="display:none;"> </div>
+      <div id="randomforestOption"style="display:none;"> </div>
+      <div class="userfunctionOption" id="userfunctionOption"style="display:none;">
+        <a>import a script file</a>
+        <div class="importUserFileLabel" id="importUserFileLabel">
+          <img src="./images/jsicon.svg">
+          <input id="importUserFile" type="file" name="files"  style="display:none;">
+        </div>
+        <p id="importUserFileName"></p>
+       
+      </div>
+    </div>
     <div id="submit" class="submit">submit</div>
   </article>
 

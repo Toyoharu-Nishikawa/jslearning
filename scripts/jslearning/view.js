@@ -15,5 +15,12 @@ export const view = {
     optionTable: document.getElementById("optionTable"),
     polynominalTem: document.getElementById("polynominaTem"),
     polynominalTableBody: document.getElementById("polynominaTableBody"),
+    linearOption:document.getElementById("linearOption"),
+    polynominalOption:document.getElementById("polynominalOption"),
+    randomforestOption:document.getElementById("randomforestOption"),
+    userfunctionOption:document.getElementById("userfunctionOption"),
+    importUserFileLabel:document.getElementById("importUserFileLabel"),
+    importUserFile:document.getElementById("importUserFile"),
+    importUserFileName:document.getElementById("importUserFileName"),
   }
 }
