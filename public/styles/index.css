@@ -1,13 +1,9 @@
 body{
   font-family:  san-serif;
   margin: 0;
-/*  border-left: 2px solid #708090; */
-/*  border-right: 2px solid #708090;*/
   display: flex;
   flex-flow: column nowrap;
-/*  height: 100vh;
-  width: 100vw;
-  */
+
 }
 header {
   display: flex;
@@ -34,13 +30,17 @@ header > div > img {
 header > ul  {
   display: flex;
   list-style: none;
+  margin:0;
+  padding:0;
 }
 header > ul > li {
   color: #3e5358;
   border: 1px solid #1495b5;
   border-radius: 6px 6px 6px 6px;
-  margin: 10px 20px 10px 50px;
+  margin: 15px 20px 10px 50px;
   padding: 1px 10px 1px 10px;
+  height: 30px;
+  text-align:center;
 }
 
 header > ul >  li:hover {
@@ -50,6 +50,16 @@ header > ul >  li:hover {
   cursor: pointer;
 }
 
+header > ul > li.help {
+  border: none;
+  width:36px;
+  height:36px;
+}
+
+header > ul > li.help>a>img {
+  width: 36px;
+  height: 36px;
+}
 main {
   flex: 1;
  /* display:flex;*/
@@ -113,7 +123,7 @@ main > article > div.draw{
   left: 400px;
   top: 200px;
   width: 200px;
-  height: 200px;
+  height: 250px;
   border: 1px solid #1495b5;
   border-radius: 10px;
   padding: 10px 10px 10px 10px;
@@ -149,14 +159,30 @@ main > article > div.draw{
   cursor: pointer;
 }
 
-footer{
-  display: flex;
-  background: #EEEEEE;
+#optionTable{
+  margin: 10px 5px;
+}
+
+#optionTable>div.userfunctionOption{
   margin:0;
   padding:0;
-  border-top: 1px solid #708090;
 }
-footer > small{
-  flex: 0 0 85%;
-  text-align: center;
+
+#optionTable>div.userfunctionOption > a{
+  margin:0;
+  padding:0;
+  color: #3e5358;
+}
+#optionTable>div.userfunctionOption >div.importUserFileLabel> img{
+  width:36px;
+  height:36px;
+}
+#optionTable>div.userfunctionOption >div.importUserFileLabel> img:hover{
+  cursor:pointer;
+}
+#optionTable>div.userfunctionOption >p{
+  margin: 1px 0px;
+  padding:0;
+  color: #3e5358;
+  word-wrap:break-word;
 }
