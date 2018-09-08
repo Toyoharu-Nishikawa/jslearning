@@ -87,9 +87,10 @@ export const model ={
   changeMethod: function(method){
     const predictions = this.predictions 
     const trainingSet = this.trainingSet
+    const code = this.importJSFile.code
   
     const regressionMethod = learning.method.get(method)
-    const regression = regressionMethod(trainingSet, predictions)
+    const regression = regressionMethod(trainingSet, predictions,code)
     this.method = method
     this.regression = regression
 
@@ -127,34 +128,35 @@ export const model ={
       saveAs(blob, filename,exportFileBOM);
     },
   },
-  change:{
+  optionChange: {
+    current:"linear",
+    list: new Map([
+      ["linear", view.elements.linearOption], 
+      ["polynominal", view.elements.polynominalOption], 
+      ["random-forest", view.elements.randomforestOption], 
+      ["user-function", view.elements.userfunctionOption], 
+    ]),
     execute:function(){
-      const text = view.elements.method.value 
-      switch(text){
-        case "linear":{
-          this.linear()
-          break
-        }
-        case "polynominal":{
-          this.polynominal()
-          break
-        }
-        case "random-forest":{
-          this.randomforest()
-          break
-        }
-        default: {
-        }
-      }
-    },
-    linear:function(){
-      view.elements.optionTable.innerHTML =""
-    },
-    polynominal:function(){
-       
-    },
-    randomforest:function(){
+      const select = view.elements.method.value
+      const current = this.current
+      this.list.get(current).style.display="none"
+      this.list.get(select).style.display="block"
+      this.current =select 
     }
+  },
+  importJSFile:{
+    code:"",
+    execute:function(){
+      const self = this
+      const text = []
+      const element = view.elements.importUserFile 
+      importFiles(element,text,()=>{
+        self.code = text[0].text  
+        view.elements.importUserFileName.textContent = text[0].filename  
+
+        console.log(self.code)
+      });
+    },
   },
   submit: {
     execute: function(){

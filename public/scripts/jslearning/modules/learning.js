@@ -35,6 +35,13 @@ export const learning = {
     const regression = new ML.MultivariateLinearRegression(trainingSet,y)
     return regression
   },
+  userFunction:function(trainingSet,predictions,code){
+    const regression = {
+      predict: new Function("x", code),
+      toJSON:function(){return code},
+    }
+    return regression 
+  },
   predict:function(point){
     const regression = model.regression 
     const method = model.method
@@ -43,6 +50,7 @@ export const learning = {
       method === "linear" ? regression.predict(point)[0]:
       method === "polynominal" ? regression.predict(polyFunc(point))[0]:
       method === "random-forest" ? regression.predict([point])[0]:
+      method === "user-function" ? regression.predict(point):
       regression.predict(point)[0]
     return result 
   }
@@ -51,3 +59,4 @@ export const learning = {
 learning.method.set("linear", learning.multivariateLinearRegression)
 learning.method.set("polynominal", learning.polynominalRegression)
 learning.method.set("random-forest", learning.randomForestRegression)
+learning.method.set("user-function", learning.userFunction)
