@@ -1,1 +1,111 @@
-help
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <title>jslearning help</title>
+  <meta charset="UTF-8"> 
+  <link rel="stylesheet" href="./styles/tui-editor/tui-editor.css">
+  <link rel="stylesheet" href="./styles/tui-editor/tui-editor-contents.css">
+</head>
+<body>
+<div class="tui-editor-contents"><h1>jslearning</h1>
+<h2>introduction</h2>
+<p>jslearning is a simple online data analysis application.<br>
+When you import a csv file, jslearning will plot the data on scatter graphs and learn them by the regression method that you select from "linear", "polynominal", "random forest" and "user function".<br>
+The learned regression model is ploted in red curves on the each  variable vs target graphs.<br>
+After you change variables on the table, jslearning wil update the predition of target by the learned regression method and replot them in red point on the graphs.</p>
+<h2>usage</h2>
+<h3>import CSV</h3>
+<p>Import a CSV file from your local file system.<br>
+The first row is the target and other rows are variables.</p>
+<table>
+<thead>
+<tr>
+<th align="center">target</th>
+<th align="center">variable 0</th>
+<th align="center">variable 1</th>
+<th align="center">variable 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">152</td>
+<td align="center">73</td>
+<td align="center">80</td>
+<td align="center">75</td>
+</tr>
+<tr>
+<td align="center">185</td>
+<td align="center">93</td>
+<td align="center">88</td>
+<td align="center">93</td>
+</tr>
+<tr>
+<td align="center">180</td>
+<td align="center">89</td>
+<td align="center">91</td>
+<td align="center">90</td>
+</tr>
+<tr>
+<td align="center">196</td>
+<td align="center">96</td>
+<td align="center">98</td>
+<td align="center">100</td>
+</tr>
+<tr>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+</tr>
+</tbody>
+</table>
+<p><a href="/jslearning/sample/sample.csv">sample CSV file</a></p>
+<h3>export Model</h3>
+<p>Export learned model as a text file.<br>
+jslearning uses <a href="https://github.com/mljs/ml">mljs</a> for "linear", "polynominal" and "random forest" regression. So, the exported file's format is JSON supported by mljs and that is readable with load function of mljs.</p>
+<h3>option</h3>
+<ul>
+<li>linear</li>
+<li>polynominal</li>
+<li>random forest</li>
+<li>user function</li>
+</ul>
+<h4>linear</h4>
+<p>linear regression model</p>
+<pre><code data-language="math" class="lang-math">y = a[0] * x[0] + a[1]*x[1] +  ... + a[n-1]*x[n-1] + b
+</code></pre>
+<h4>polynominal</h4>
+<p>fourth-order polynominal regression model</p>
+<pre><code data-language="math" class="lang-math">y = a[0][0]*x[0] + a[0][1]*x[0]^2 + a[0][2]*x[0]^3 + a[0][3]*x[0]^4
+  + a[1][0]*x[0] + a[1][1]*x[1]^2 + a[1][2]*x[0]^3 + a[1][3]*x[1]^4
+  ...
+  + a[n-1][0]*x[n-1] + a[n-1][1]*x[n-1]^2 + a[n-1][2]*x[n-1]^3 + a[n-1][3]*x[n-1]^4
+  + b
+</code></pre>
+<h4>random forest</h4>
+<p>random forest regression model</p>
+<h4>user function</h4>
+<p>read a javascript file to use pre-learned model by users</p>
+<p>-- sample code --</p>
+<pre><code data-language="js" class="lang-js"><span class="hljs-keyword">const</span> y = x[<span class="hljs-number">0</span>]*<span class="hljs-number">2</span>+x[<span class="hljs-number">1</span>] + x[<span class="hljs-number">2</span>]/<span class="hljs-number">2</span>
+<span class="hljs-keyword">return</span> y
+</code></pre>
+<p><a href="/jslearning/sample/sampleUserFunction.txt">sample user function file</a></p>
+<p>-- caution --<br>
+"x" is the reserved word in jslearning and  means the array of variables for user's input.<br>
+The value of predition have to be returned in the javascript file.<br>
+jslearning will run the script as a Function contructor.</p>
+<p>-- reference --<br>
+The following code is quoted from the source code of jslearning as a reference.</p>
+<pre><code data-language="js" class="lang-js">userFunction:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">trainingSet,predictions,code</span>)</span>{
+  <span class="hljs-keyword">const</span> regression = {
+    <span class="hljs-attr">predict</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Function</span>(<span class="hljs-string">"x"</span>, code),
+    <span class="hljs-attr">toJSON</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{<span class="hljs-keyword">return</span> code},
+  }
+  <span class="hljs-keyword">return</span> regression 
+},
+</code></pre>
+</div>
+<body>
+</html>
