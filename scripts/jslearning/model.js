@@ -153,8 +153,6 @@ export const model ={
       importFiles(element,text,()=>{
         self.code = text[0].text  
         view.elements.importUserFileName.textContent = text[0].filename  
-
-        console.log(self.code)
       });
     },
   },
@@ -162,9 +160,6 @@ export const model ={
     execute: function(){
       const text = view.elements.method.value 
       console.log(text)
-      if(text===model.method){
-        return
-      }
       model.changeMethod(text)
     }
   }
