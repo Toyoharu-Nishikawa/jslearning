@@ -20,7 +20,13 @@ export const model ={
   values:null,
   regression:null,
   method: "linear",
+  displayMode: "all",
   minMax:null,
+  labels:null, 
+  dataset:null,
+  predictions:null,
+  trainingSet:null, 
+  regression:null,
   options:new Map([
     ["random-forest", randomForestInitalOption],
     ["polynominal", polynominalInitialOption],
@@ -55,14 +61,15 @@ export const model ={
       [149, 76, 83, 71],
       [192, 96, 93, 95],
     ]
+    const displayMode = model.displayMode
 
-    model.set(labels, dataset,"linear")
+    model.set(labels, dataset,"linear",displayMode)
   },
-  set:function(labels, dataset, method){
+  set:function(labels, dataset, method, displayMode){
     const dataT = transpose(dataset)
     const values =  dataT.slice(1)
     this.method = method
-    plot.plotData(labels, dataset, 200, 250)
+    plot.plotData(labels, dataset, 200, 250,displayMode)
 
     const minMax = values.map(v=>[Math.min(...v), Math.max(...v)]) 
     this.minMax = minMax
@@ -84,22 +91,33 @@ export const model ={
 
     plot.plotPointAndLine(point)
   },
-  changeMethod: function(method){
+  changeMethod: function(method,flag){
+    if(this.method===method){return}
+
     const predictions = this.predictions 
     const trainingSet = this.trainingSet
     const code = this.importJSFile.code
-  
     const regressionMethod = learning.method.get(method)
     const regression = regressionMethod(trainingSet, predictions,code)
     this.method = method
     this.regression = regression
 
     const point = table.getPoint()
- 
     table.changeMethod(method)
 
+    if(flag){
+      plot.plotPointAndLine(point)
+    }
+  },
+  changeDisplayMode:function(displayMode){
+    if(this.displayMode===displayMode){return}
+
+    this.displayMode = displayMode
+    const labels = this.labels 
+    const dataset = this.dataset 
+    const point = table.getPoint()
+    plot.plotData(labels, dataset, 200, 250,displayMode)
     plot.plotPointAndLine(point)
-  
   },
   import:{
     execute:function(){
@@ -110,10 +128,11 @@ export const model ={
         const data = plot.parseData(text[0].text)   
         const labels = data.labels
         const dataset= data.dataset
+        const displayMode= model.displayMode
         const valueLength = dataset[0].length-1
         const polynominalParameterList = [...Array(valueLength)].fill(3)
         model.options.set("polynominal", polynominalParameterList)
-        model.set(labels, dataset,method)
+        model.set(labels, dataset,method, displayMode)
       });
     }
   },
@@ -158,9 +177,13 @@ export const model ={
   },
   submit: {
     execute: function(){
-      const text = view.elements.method.value 
-      console.log(text)
-      model.changeMethod(text)
+      const method = view.elements.method.value 
+      const displayMode = view.elements.displayMode.value 
+      console.log(method)
+      console.log(displayMode)
+      const flag = this.displayMode === displayMode
+      model.changeMethod(method,flag)
+      model.changeDisplayMode(displayMode)
     }
   }
 }
