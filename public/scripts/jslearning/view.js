@@ -22,5 +22,6 @@ export const view = {
     importUserFileLabel:document.getElementById("importUserFileLabel"),
     importUserFile:document.getElementById("importUserFile"),
     importUserFileName:document.getElementById("importUserFileName"),
+    displayMode: document.forms.display.displayMode,
   }
 }

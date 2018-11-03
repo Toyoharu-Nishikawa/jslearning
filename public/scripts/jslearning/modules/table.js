@@ -25,7 +25,7 @@ export const table={
           const flag = a < b ? -1: 1
           return flag
         })
-    const point = keys.map(v=>list[v])
+    const point = keys.map(v=>parseFloat(list[v]))
     this.point = point
     return point
   },
