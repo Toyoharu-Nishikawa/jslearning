@@ -195,7 +195,7 @@ export const plot ={
      const trace1 = {
       x: x ,
       y: y ,
-      marker: {size: 5,color:"red"}, 
+      marker: {size: 7,color:"red"}, 
       mode: 'markers', 
       name: 'sample', 
       type: 'scatter', 

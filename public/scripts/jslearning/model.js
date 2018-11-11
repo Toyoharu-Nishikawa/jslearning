@@ -91,28 +91,24 @@ export const model ={
 
     plot.plotPointAndLine(point)
   },
-  changeMethod: function(method,flag){
-    if(this.method===method){return}
-
+  changeMethod: function(method, displayModeChangeFlag){
     const predictions = this.predictions 
     const trainingSet = this.trainingSet
     const code = this.importJSFile.code
     const regressionMethod = learning.method.get(method)
     const regression = regressionMethod(trainingSet, predictions,code)
-    this.method = method
+    this.method=method
     this.regression = regression
 
     const point = table.getPoint()
     table.changeMethod(method)
 
-    if(flag){
+    if(!displayModeChangeFlag){
       plot.plotPointAndLine(point)
     }
   },
   changeDisplayMode:function(displayMode){
-    if(this.displayMode===displayMode){return}
-
-    this.displayMode = displayMode
+    this.displayMode=displayMode
     const labels = this.labels 
     const dataset = this.dataset 
     const point = table.getPoint()
@@ -181,9 +177,18 @@ export const model ={
       const displayMode = view.elements.displayMode.value 
       console.log(method)
       console.log(displayMode)
-      const flag = this.displayMode === displayMode
-      model.changeMethod(method,flag)
-      model.changeDisplayMode(displayMode)
+      const methodChangeFlag = model.method !==method 
+      const displayModeChangeFlag = model.displayMode !== displayMode
+
+      console.log("methodChangeFlag", methodChangeFlag)
+      console.log("displayModeChangeFlag", displayModeChangeFlag)
+
+      if(methodChangeFlag){
+        model.changeMethod(method, displayModeChangeFlag)
+      }
+      if(displayModeChangeFlag){
+        model.changeDisplayMode(displayMode)
+      }
     }
   }
 }
