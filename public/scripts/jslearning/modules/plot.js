@@ -141,7 +141,7 @@ export const plot ={
       }
     )
   },
-  plotPointAndLine:function(point){
+  plotPointAndLine: async function(point){
     const samplingN = 101
     const minMax = model.minMax
     const predict = learning.predict 
@@ -154,17 +154,17 @@ export const plot ={
         )
       )
     console.log(minMaxIncUserInput,point)
-    const predictedPoint = predict(point)
+    const predictedPoint = await predict(point)
     console.log(predictedPoint) 
     const points = point.map(v=>Object({x:v, y:predictedPoint}))
-    const lines = sampleSet.map((v,i)=>{
+    const lines = await Promise.all(sampleSet.map(async(v,i)=>{
         const x = v.map(u=>point.map((w,k)=>i===k?u:w))
-        const y = x.map(predict)
+        const y = await Promise.all(x.map(async u=>await predict(u)))
         return {
           x: x.map(u=>u[i]),
           y: y,
         }
-      })
+      }))
     plot.update(points, lines)
   },
   update:function(points, lines){
