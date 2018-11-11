@@ -4,12 +4,12 @@ import {plot} from "./plot.js"
 "use strict"
 export const table={
   point: null,
-  cellEdit: function(e){
+  cellEdit: async function(e){
     const predict = learning.predict
     const list = e.getRow().getCells().map(v=>v.getValue())
     const point = list.slice(1,-1).map(parseFloat)
 
-    const y = predict(point)
+    const y = await predict(point)
     e.getRow().getCell("target").setValue(y)
     plot.plotPointAndLine(point)
 
@@ -29,16 +29,16 @@ export const table={
     this.point = point
     return point
   },
-  changeMethod:function(){
+  changeMethod:async function(){
     const point = this.point
     const predict = learning.predict
-    const y = predict(point)
+    const y = await predict(point)
  
     $("#table").tabulator("updateData",[{id:0, target:y}] )
   },
-  setTable:function(labels, point){
+  setTable:async function(labels, point){
     const predict = learning.predict
-    const y = predict(point)
+    const y = await predict(point)
     if($("#table").tabulator()){
         $("#table").tabulator("destroy")
     }
