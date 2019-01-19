@@ -1,10 +1,14 @@
 import {model} from "../model.js"
+import * as sciReg from "../node_modules/sci/regression/index.mjs"
 
 "use strict"
 
-const polynominalize = (options)=>{
+const makePolyList = (x, n)=>[...Array(n)].map((v,i)=>x**(i+1))
+// x => [x, x**2, x**3, ... , x**n]
+
+const polynominalize = (degree)=>{
   return list => {
-    const data = list.map((u,i)=>[...Array(options[i])].map((w,j)=>u**(j+1)))
+    const data = list.map((v,i)=>makePolyList(v, degree[i]))
     const res =  [].concat(...data)
     return res
   }
@@ -13,29 +17,33 @@ const polynominalize = (options)=>{
 export const learning = {
   method:new Map(),
   polyFunc:null,
-  randomForestRegression:function(trainingSet, predictions){
-    const options = model.options.get("random-forest")
-    const regression = new ML.RandomForestRegression(options)
-    regression.train(trainingSet, predictions)
+  linearRegression:function(x, y) {
+    const regression = sciReg.linearRegression(x, y)
     return regression
   },
-  polynominalRegression:function(trainingSet,predictions){
+  polynominalRegression:function(x, y){
     const options = model.options.get("polynominal")
-    console.log("options",options)
-    const polyFunc = polynominalize(options)
-    learning.polyFunc = polyFunc
-    const increasedTrainingSet = trainingSet.map(polyFunc)
-    const y = predictions.map(v=>[v])
-    const regression = new ML.MultivariateLinearRegression(increasedTrainingSet,y)
-    return regression
-  
-  },
-  multivariateLinearRegression:function(trainingSet, predictions) {
-    const y = predictions.map(v=>[v])
-    const regression = new ML.MultivariateLinearRegression(trainingSet,y)
+    const degree = options.degree
+    const regression = sciReg.polynominalRegression(x, y, degree)
     return regression
   },
-  userFunction:function(trainingSet,predictions,code){
+  gaussKernelRegression:function(x, y) {
+    const options = model.options.get("gaussKernel")
+    const beta = options.beta
+    const C = options.C
+    const regression = sciReg.gaussKernelRegression(x, y, beta, C)
+    return regression
+  },
+  SVR:function(x, y) {
+    const options = model.options.get("SVR")
+    const beta = options.beta
+    const C = options.C
+    const epsilon = options.epsilon
+    const tolerance = options.tolerance
+    const regression = sciReg.SVR(x, y, beta, C, epsilon,tolerance)
+    return regression
+  },
+  userFunction:function(trainingSet, predictions, code){
     const regression = {
       predict: new Function("x", code),
       toJSON:function(){return code},
@@ -44,19 +52,13 @@ export const learning = {
   },
   predict:function(point){
     const regression = model.regression 
-    const method = model.method
-    const polyFunc = learning.polyFunc
-    const result = 
-      method === "linear" ? regression.predict(point)[0]:
-      method === "polynominal" ? regression.predict(polyFunc(point))[0]:
-      method === "random-forest" ? regression.predict([point])[0]:
-      method === "user-function" ? regression.predict(point):
-      regression.predict(point)[0]
+    const result = regression.predict(point)
     return result 
   }
 }
 
-learning.method.set("linear", learning.multivariateLinearRegression)
+learning.method.set("linear", learning.linearRegression)
 learning.method.set("polynominal", learning.polynominalRegression)
-learning.method.set("random-forest", learning.randomForestRegression)
+learning.method.set("gaussKernel", learning.gaussKernelRegression)
+learning.method.set("SVR", learning.SVR)
 learning.method.set("user-function", learning.userFunction)

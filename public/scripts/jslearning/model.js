@@ -4,17 +4,25 @@ import {plot} from "./modules/plot.js"
 import {learning} from "./modules/learning.js"
 import {csvParse,transpose} from "./modules/matrix.js"
 import {importFiles} from "../filereader/index.js"
-import {saveAs} from "../file-saver/FileSaver.js"
+import * as statistics from "../sci/statistics/index.mjs"
 
 "use strict"
 
-const randomForestInitalOption = {
-  seed: 3,
-  maxFeatures: 2,
-  replacement: false,
-  nEstimators: 200
+const polynominalInitialOption = {
+  degree: [3, 3, 3],
 }
-const polynominalInitialOption = [3, 3, 3]
+
+const gaussKernelInitialOption = {
+  beta: 0.1,
+  C: 100,
+}
+
+const SVRInitialOption = {
+  beta: 0.1,
+  C: 100,
+  eplison: 1E-2,
+  tolerance: 1E-3,
+}
 
 export const model ={
   values:null,
@@ -27,9 +35,10 @@ export const model ={
   predictions:null,
   trainingSet:null, 
   regression:null,
-  options:new Map([
-    ["random-forest", randomForestInitalOption],
+  options: new Map([
     ["polynominal", polynominalInitialOption],
+    ["gaussKernel", gaussKernelInitialOption],
+    ["SVR", SVRInitialOption],
   ]),
   initialize: function(){
 
@@ -78,6 +87,8 @@ export const model ={
 
     const predictions = dataT[0]
     const trainingSet = transpose(values)
+    console.log("predictions", predictions)
+    console.log("trainingSet", trainingSet)
     const regressionMethod = learning.method.get(method)
     const regression = regressionMethod(trainingSet, predictions)
 
@@ -86,6 +97,8 @@ export const model ={
     this.regression = regression
 
     const point = trainingSet[0]
+    const R2 = statistics.R2(trainingSet, predictions, regression.predict)
+    console.log("R2", R2)
  
     table.setTable(labels, point)
 
@@ -96,9 +109,12 @@ export const model ={
     const trainingSet = this.trainingSet
     const code = this.importJSFile.code
     const regressionMethod = learning.method.get(method)
-    const regression = regressionMethod(trainingSet, predictions,code)
+    const regression = regressionMethod(trainingSet, predictions, code)
     this.method=method
     this.regression = regression
+
+    const R2 = statistics.R2(trainingSet, predictions, regression.predict)
+    console.log("R2", R2)
 
     const point = table.getPoint()
     table.changeMethod(method)
@@ -116,25 +132,26 @@ export const model ={
     plot.plotPointAndLine(point)
   },
   import:{
-    execute:function(){
+    execute:async function(){
       const element = view.elements.importFile 
       const text = []
       const method = model.method
-      importFiles(element,text,()=>{
-        const data = plot.parseData(text[0].text)   
-        const labels = data.labels
-        const dataset= data.dataset
-        const displayMode= model.displayMode
-        const valueLength = dataset[0].length-1
-        const polynominalParameterList = [...Array(valueLength)].fill(3)
-        model.options.set("polynominal", polynominalParameterList)
-        model.set(labels, dataset,method, displayMode)
-      });
+      const text = await importFiles(element)
+
+      const data = plot.parseData(text[0].text)   
+      const labels = data.labels
+      const dataset= data.dataset
+      const displayMode= model.displayMode
+      const valueLength = dataset[0].length-1
+      const polynominalParameterList = [...Array(valueLength)].fill(3)
+      model.options.set("polynominal", polynominalParameterList)
+      model.set(labels, dataset, method, displayMode)
+ 
     }
   },
   export:{
     execute:function(){
-      const modelJSON = model.regression.toJSON()
+      const modelJSON = model.regression.parameters
       console.log(modelJSON)
       const exportText = JSON.stringify(modelJSON,null, "  ")
       const filename = "jslearning.model.json"
@@ -148,7 +165,8 @@ export const model ={
     list: new Map([
       ["linear", view.elements.linearOption], 
       ["polynominal", view.elements.polynominalOption], 
-      ["random-forest", view.elements.randomforestOption], 
+      ["gaussKernel", view.elements.gaussKernelOption], 
+      ["SVR", view.elements.SVROption], 
       ["user-function", view.elements.userfunctionOption], 
     ]),
     execute:function(){
