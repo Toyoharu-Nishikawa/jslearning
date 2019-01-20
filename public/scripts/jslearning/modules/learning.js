@@ -24,6 +24,7 @@ export const learning = {
   polynominalRegression:function(x, y){
     const options = model.options.get("polynominal")
     const degree = options.degree
+    console.log(degree)
     const regression = sciReg.polynominalRegression(x, y, degree)
     return regression
   },
@@ -31,6 +32,7 @@ export const learning = {
     const options = model.options.get("gaussKernel")
     const beta = options.beta
     const C = options.C
+    console.log(beta, C)
     const regression = sciReg.gaussKernelRegression(x, y, beta, C)
     return regression
   },
@@ -40,6 +42,7 @@ export const learning = {
     const C = options.C
     const epsilon = options.epsilon
     const tolerance = options.tolerance
+    console.log(beta, C, epsilon, tolerance)
     const regression = sciReg.SVR(x, y, beta, C, epsilon,tolerance)
     return regression
   },

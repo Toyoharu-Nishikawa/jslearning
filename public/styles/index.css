@@ -98,7 +98,18 @@ main >article {
 main > article > div.table{
   margin: 10px 50px;
   height: 80px;
+  display:flex;
 }
+
+main > article > div.table > div.table1{
+  flex:1; 
+}
+
+main > article > div.table > div.table2{
+  width: 100px; 
+  margin: 0px 0px 0px 10px;
+}
+
 main > article > div.draw{
   flex:1;
   margin: 10px 50px;
@@ -185,4 +196,30 @@ main > article > div.draw{
   padding:0;
   color: #3e5358;
   word-wrap:break-word;
+}
+
+ul.optionUL {
+  display:flex;
+  flex-direction: column;
+  margin: 0px 2px 0px 2px;
+  padding:0;
+}
+ul.optionUL> li {
+  display:flex;
+  margin: 2px 0px 2px 0px;
+  padding:0;
+}
+
+ul.optionUL> li > p {
+  margin: 0 2px 0 0;
+  padding: 0;
+  color: #3e5358;
+  font-size: 9pt;
+  width: 60px;
+}
+ 
+ul.optionUL> li > input {
+  margin: 0;
+  padding: 0;
+  width: 50px;
 }

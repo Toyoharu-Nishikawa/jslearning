@@ -36,6 +36,7 @@ export const model ={
   trainingSet:null, 
   regression:null,
   options: new Map([
+    ["linear", null],
     ["polynominal", polynominalInitialOption],
     ["gaussKernel", gaussKernelInitialOption],
     ["SVR", SVRInitialOption],
@@ -98,6 +99,8 @@ export const model ={
 
     const point = trainingSet[0]
     const R2 = statistics.R2(trainingSet, predictions, regression.predict)
+    table.setR2(R2)
+
     console.log("R2", R2)
  
     table.setTable(labels, point)
@@ -114,6 +117,7 @@ export const model ={
     this.regression = regression
 
     const R2 = statistics.R2(trainingSet, predictions, regression.predict)
+    table.setR2(R2)
     console.log("R2", R2)
 
     const point = table.getPoint()
@@ -134,7 +138,6 @@ export const model ={
   import:{
     execute:async function(){
       const element = view.elements.importFile 
-      const text = []
       const method = model.method
       const text = await importFiles(element)
 
@@ -190,18 +193,97 @@ export const model ={
     },
   },
   submit: {
+    elemMap: new Map([
+      ["linear", view.elements.linearOption], 
+      ["polynominal", view.elements.polynominalOption], 
+      ["gaussKernel", view.elements.gaussKernelOption], 
+      ["SVR", view.elements.SVROption], 
+    ]),
+    changeOptions: function(method, values){
+      switch(method){
+        case "linear":{
+          return false
+        }
+        case "polynominal": {
+          const degreesString = values[0]
+          const N =model.trainingSet[0].length 
+          const degreesTmp = degreesString.split(",").map(v=>parseInt(v))
+          const n = degreesTmp.length
+          const degrees = [...Array(N)].map((v,i)=>i<n ?
+             degreesTmp[i] :degreesTmp[n-1] )
+          const options = model.options.get("polynominal")
+          const degreesOld = options.degree
+          const flag = degrees.every((v,i)=>v==degreesOld[i]) 
+          if(flag){
+            return false
+          }
+          else{
+            options.degree = degrees
+            return true
+          }
+        }
+        case "gaussKernel": {
+          const beta = parseFloat(values[0])
+          const C = parseFloat(values[1])
+          const options = model.options.get("gaussKernel")
+          const betaOld = options.beta
+          const COld = options.C
+          const flag = beta == betaOld && C == COld
+          if(flag){
+           return false 
+          }
+          else{
+            options.beta = beta
+            options.C = C
+            return true
+          }
+        }
+        case "SVR": {
+          const beta = parseFloat(values[0])
+          const C = parseFloat(values[1])
+          const epsilon = parseFloat(values[2])
+          const tolerance = parseFloat(values[3])
+          const options = model.options.get("SVR")
+          const betaOld = options.beta
+          const COld = options.C
+          const epsilonOld = options.epsilon
+          const tolerancOld = options.tolerance
+
+          const flag = beta == betaOld && C == COld 
+            && epsilon == epsilonOld && tolerance == toleranceOld
+
+          if(flag){
+           return false 
+          }
+          else{
+            options.beta = beta
+            options.C = C
+            options.epsilon = epsilon
+            options.tolerance = tolerance
+            return true
+          }
+        }
+      }
+    },
     execute: function(){
       const method = view.elements.method.value 
       const displayMode = view.elements.displayMode.value 
-      console.log(method)
-      console.log(displayMode)
+      const inputElems = this.elemMap.get(method)
+        .getElementsByTagName("input")
+      const values = [...inputElems].map(v=>v.value)
+
+      console.log("method", method)
+      console.log("option", values)
+      console.log("displaymode", displayMode)
+
       const methodChangeFlag = model.method !==method 
+      const changeOptionFlag = this.changeOptions (method, values)
       const displayModeChangeFlag = model.displayMode !== displayMode
 
       console.log("methodChangeFlag", methodChangeFlag)
       console.log("displayModeChangeFlag", displayModeChangeFlag)
 
-      if(methodChangeFlag){
+      if(methodChangeFlag || changeOptionFlag){
         model.changeMethod(method, displayModeChangeFlag)
       }
       if(displayModeChangeFlag){

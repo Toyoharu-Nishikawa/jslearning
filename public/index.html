@@ -33,7 +33,8 @@
   <main>
     <article>
       <div class="table">
-        <div id="table"></div>
+        <div class=table1 id="table"></div>
+        <div class=table2 id="table2"></div>
       </div>
       <div class="draw">
         <div id="draw"></div>
@@ -53,9 +54,46 @@
     </form>
     <div id="optionTable">
       <div class="linearOption" id="linearOption" style="display:block"></div>
-      <div id="polynominalOption"style="display:none;"> </div>
-      <div id="gaussKernelOption"style="display:none;"> </div>
-      <div id="SVROption"style="display:none;"> </div>
+      <div id="polynominalOption"style="display:none;">
+        <ul class="optionUL">
+          <li>
+            <p>degrees</p>
+            <input id="polynominalInput" type="text" value="3,3,3"> 
+          </li>
+        </ul>
+      </div>
+      <div id="gaussKernelOption"style="display:none;">
+        <ul class="optionUL">
+          <li>
+            <p>beta</p>
+            <input id="betaInput" type="text" value="0.1"> 
+          </li>
+          <li>
+            <p>C</p>
+            <input id="CInput" type="text" value="100"> 
+          </li>
+        </ul>
+      </div>
+      <div id="SVROption"style="display:none;">
+        <ul class="optionUL">
+          <li>
+            <p>beta</p>
+            <input id="betaSVRInput" type="text" value="0.1"> 
+          </li>
+          <li>
+            <p>C</p>
+            <input id="CSVRInput" type="text" value="100"> 
+          </li>
+          <li>
+            <p>epsilon</p>
+            <input id="epsilonSVRInput" type="text" value="0.01"> 
+          </li>
+          <li>
+            <p>tolerance</p>
+            <input id="toleranceSVRInput" type="text" value="0.001"> 
+          </li>
+        </ul>
+      </div>
       <div class="userfunctionOption" id="userfunctionOption"style="display:none;">
         <a>import a script file</a>
         <div class="importUserFileLabel" id="importUserFileLabel">

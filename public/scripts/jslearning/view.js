@@ -24,5 +24,6 @@ export const view = {
     importUserFile:document.getElementById("importUserFile"),
     importUserFileName:document.getElementById("importUserFileName"),
     displayMode: document.forms.display.displayMode,
+    
   }
 }
