@@ -21,6 +21,7 @@ export const table={
     const predict = learning.predict
     const list = e.getRow().getCells().map(v=>v.getValue())
     const point = list.slice(1).map(parseFloat)
+    this.point = point
 
     const y = await predict(point)
     e.getRow().getCell("target").setValue(y)
@@ -28,6 +29,7 @@ export const table={
 
   },
   getPoint:function(){
+    /*
     const cells = this.tabu.getData()
     const list = cells[0]
     const keys = Object.keys(list)
@@ -40,8 +42,12 @@ export const table={
         })
     const point = keys.map(v=>parseFloat(list[v]))
     console.log("point",point)
-    this.point = point
+    */
+    const point = this.point
     return point
+  },
+  setPoint:function(point){
+    this.point = point
   },
   changeMethod:async function(){
     const tabu = this.tabu
@@ -64,9 +70,13 @@ export const table={
 
     const data = [Object.assign({id:0,target:y,}, ...point.map((v,i)=>Object({[labels[i+1]]:v})))]
 
+    this.setPoint(point)
+    console.log("data", data)
+
     tabu.setColumns(columns)
     tabu.updateOrAddData(data)
-
+    
+    return Promise.resolve(true)
  },
   setR2: function(R2){
     const tabu2 = this.tabu2
