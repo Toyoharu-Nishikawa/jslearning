@@ -75,7 +75,7 @@ export const model ={
 
     model.set(labels, dataset,"linear",displayMode)
   },
-  set:function(labels, dataset, method, displayMode){
+  set:async function(labels, dataset, method, displayMode){
     const dataT = transpose(dataset)
     const values =  dataT.slice(1)
     this.method = method
@@ -98,12 +98,15 @@ export const model ={
     this.regression = regression
 
     const point = trainingSet[0]
+
     const R2 = statistics.R2(trainingSet, predictions, regression.predict)
     table.setR2(R2)
 
     console.log("R2", R2)
  
-    table.setTable(labels, point)
+    await table.setTable(labels, point)
+
+    console.log("table", table.tabu.getData())
 
     plot.plotPointAndLine(point)
   },
@@ -146,7 +149,9 @@ export const model ={
       const dataset= data.dataset
       const displayMode= model.displayMode
       const valueLength = dataset[0].length-1
-      const polynominalParameterList = [...Array(valueLength)].fill(3)
+      const polynominalParameterList = {
+        degree: [...Array(valueLength)].fill(3)
+      }
       model.options.set("polynominal", polynominalParameterList)
       model.set(labels, dataset, method, displayMode)
  
