@@ -18,7 +18,6 @@ const readFile = (file)=>{
         ext: fileExtension,
         text: fileData,
       }         
-      console.log("read", filename)
       resolve(data)
     }
     reader.readAsText(file, 'UTF-8')
