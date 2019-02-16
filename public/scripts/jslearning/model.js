@@ -252,7 +252,7 @@ export const model ={
           const betaOld = options.beta
           const COld = options.C
           const epsilonOld = options.epsilon
-          const tolerancOld = options.tolerance
+          const toleranceOld = options.tolerance
 
           const flag = beta == betaOld && C == COld 
             && epsilon == epsilonOld && tolerance == toleranceOld
