@@ -117,6 +117,61 @@ multipulation of matrix and column vector, Av
 * A : type of double array , matrix 
 * v : type of double array , column vector 
 
+### geometry
+------
+
+#### `geometry.checkCross(a1, a2, b1, b2)`
+
+returns `boolean`
+
+check cross of segement a1-a2 and segment b1 -b2
+* a1 : type of array , [x, y] 
+* a2 : type of array , [x, y]
+* b1 : type of array , [x, y] 
+* b2 : type of array , [x, y]
+
+#### `geometry.getCrossPoint(a1, a2, b1, b2)`
+
+returns `array` //[x, y]
+
+calculate cross point of line a1 -a2 and b1 - b2
+* a1 : type of array , [x, y] 
+* a2 : type of array , [x, y]
+* b1 : type of array , [x, y] 
+* b2 : type of array , [x, y]
+
+#### `geometry.offset(l, normalizedCubicspline)`
+
+returns `function`
+
+make offset curve function
+* l : type of float ,  // offset length 
+* normalizedCubicspline: type of function , // equal to return of interpolate.normalizedCubicspline
+
+return function is (t) => array of float [x, y] // 0 <= t <= 1
+
+#### `geometry.getCrossPointOfCurves(t0, t1, s0, s1, curveFuncT, curveFuncS [, maxIteration=10, tolerance=1E-5])`
+
+returns `array` // [t, s]
+
+get cross point of curveFuncT between t0 and t1 , and curveFuncS between s0 and s1
+* t0 : type of float ,  // 0 <= t0 < t1 <=1 
+* t1 : type of float ,  // 0 <= t0 < t1 <=1 
+* s0 : type of float ,  // 0 <= s0 < s1 <=1 
+* s1 : type of float ,  // 0 <= s0 < s1 <=1 
+
+* curveFuncT: type of function , // (t) => [x(t), y[t]]
+* curveFuncS: type of function , // (s) => [x(s), y[s]]
+
+#### `geometry.getStrictSelfCrossPoints(curveFunc, [, N=100, tolerance=1E-5])`
+
+returns `double array` // [[t0, s0], [t1, s1], ... , [tn, sn]]
+
+get cross points of self curve
+* curveFunc : type of function ,  // 0 <= t <=1 , (t)=> [x(t), y(t)] 
+* N : type of integer ,        // devisions of curve
+* tolerance : type of float ,  // iteration tolerance
+
 
 ### interpolate
 ------
@@ -169,6 +224,42 @@ a0=0, an=0, method="M" is natural cubic spline
 * method: type of string , edge condition option , "M" or "m" , default = "M"
   + "m" : specify first-order differentiation at the start and end points
   + "M" : specify second-order differentiation at the start and end points
+
+#### `interpolate.normalizedCubicspline(list, [,cyclicFlag=false])`
+
+returns `object`
+```javascript
+{
+    X: "function", // (t) => x coordinate            //0<= t <=1
+    Y: "function", // (t) => y coordinate            //0<= t <=1
+    DX: "function", //(t) => x component of tangent  //0<= t <=1
+    DY: "function", //(t) => y component of tangent  //0<= t <=1
+}
+```
+
+interpolates coordinate of y0 from coordinate of x0 by cyclic cubic spline
+
+* list : type of double array ,  [[x0, y0], [x1,y1], ..., [xn, yn]]
+* cyclicFlag: type of boolean , if true: cyclic spline , if flase: non-cyclic spline
+
+#### `interpolate.normalize(X, Y)`
+
+returns `function`
+
+normalize parametric X and Y function to (t) => [X(t), Y(t)]
+
+* X : type of function ,  // (t) => X(t)
+* Y : type of function ,  // (t) => Y(t)
+
+#### `interpolate.renormalize(t0, t1, normalizedFunc)`
+
+returns `function`
+
+renormalize function 0 <= t <= 1   =>   function t0 <= t <= t1
+
+* t0 : type of float ,  // initial of t   
+* t1 : type of float ,  // end of t
+* normalizedFunc: type of function , // (t) => [X(t), Y(t)]
 
 #### `interpolate.bspline(x, y [,degree=3, k])`
 
@@ -582,3 +673,16 @@ return function is
 f = exp(-beta*|x1-x2|**2)
 * x1: type of array
 * x2: type of array
+
+#### `funcs.zukofsky(x0, y0, c)`
+
+returns `function`
+
+zukofsky wing   
+* x0 : type of float
+* y0 : type of float
+* c : type of float
+
+return function is
+function(p)
+* p: type of float, 0<= p <= 2pi
