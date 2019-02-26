@@ -1,3 +1,3 @@
-export {bspline} from "./bspline.mjs"
-export {linear} from "./linear.mjs"
-export {cubicspline,cubicsplineLinear} from "./cubicspline.mjs"
+export * from "./bspline.mjs"
+export * from "./linear.mjs"
+export * from "./cubicspline.mjs"
