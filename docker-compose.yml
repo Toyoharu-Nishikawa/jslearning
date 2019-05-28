@@ -1,12 +1,10 @@
 version: '2'
 services:
   web:
-    image: nginx:alpine
+    build:
+      context: ./
+      dockerfile: ./web/Dockerfile
     restart: always 
-    volumes:
-      - ./public:/usr/share/nginx/html
-      - ./conf.d:/etc/nginx/conf.d
-      - /var/log/jslearning:/var/log/nginx
     networks:
       - neco_link
 networks:
