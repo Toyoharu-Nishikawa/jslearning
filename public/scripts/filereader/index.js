@@ -32,8 +32,12 @@ const stop = (e)=>{
 export const importFiles = (elem, callback)=> {
   return new Promise((resolve, reject)=>{
     elem.onchange = async (e)=>{
+      const startEvent = new Event("read.start")
+      elem.dispatchEvent(startEvent)
       const filelist = [...e.target.files]
       const fileData = await Promise.all(filelist.map(async (v)=>await readFile(v)))
+      const endEvent = new CustomEvent("read.finish",{detail:fileData})
+      elem.dispatchEvent(endEvent)
       callback && callback(fileData);
       resolve(fileData)
     }

@@ -142,6 +142,8 @@ export const model ={
     execute:async function(){
       const element = view.elements.importFile 
       const method = model.method
+      element.addEventListener("read.start", (e)=>{console.log("read start")},{once:true})
+      element.addEventListener("read.finish", (e)=>{console.log("read finish", e.detail)},{once:true})
       const text = await importFiles(element)
 
       const data = plot.parseData(text[0].text)   
