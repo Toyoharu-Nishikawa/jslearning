@@ -32,6 +32,7 @@ export const model ={
   minMax:null,
   labels:null, 
   dataset:null,
+  correlationCoefficiences:null,
   predictions:null,
   trainingSet:null, 
   regression:null,
@@ -79,7 +80,13 @@ export const model ={
     const dataT = transpose(dataset)
     const values =  dataT.slice(1)
     this.method = method
-    plot.plotData(labels, dataset, 200, 250,displayMode)
+
+    
+    const correationCoefficiences = displayMode ==="all"? 
+        statistics.correlationAnalysis(dataset): [[]]
+
+    this.correlationCoefficiences = correationCoefficiences
+    plot.plotData(labels, dataset, correationCoefficiences, 200, 250,displayMode)
 
     const minMax = values.map(v=>[Math.min(...v), Math.max(...v)]) 
     this.minMax = minMax
@@ -134,8 +141,9 @@ export const model ={
     this.displayMode=displayMode
     const labels = this.labels 
     const dataset = this.dataset 
+    const correlationCoefficiences = this.correlationCoefficiences
     const point = table.getPoint()
-    plot.plotData(labels, dataset, 200, 250,displayMode)
+    plot.plotData(labels, dataset, correlationCoefficiences, 200, 250,displayMode)
     plot.plotPointAndLine(point)
   },
   import:{

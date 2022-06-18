@@ -49,7 +49,7 @@ export const plot ={
       [...Array(N)].map((v,i)=>i===0?[...Array(N)].fill(true):[...Array(N)].fill(false))
     return displayFlag
   },
-  plotData:function(labels, dataset, height, width, displayMode){
+  plotData:function(labels, dataset, correlationCoefficiences,height, width, displayMode){
     if(this.table){
       this.table.element.remove() 
       this.table =null
@@ -81,7 +81,14 @@ export const plot ={
           const xlabel = u 
           const ylabel = v 
           if(displayFlag[i][j]){
-            plot.plotScatter(elem, x, y, xlabel, ylabel, height,width)
+            if(i<j){
+              plot.plotScatter(elem, x, y, xlabel, ylabel, height,width)
+            }
+            else{
+              const corCoef = Math.round(correlationCoefficiences[j][i]*1E4)/1E4
+              elem.innerHTML ="<p>"+ corCoef +"</p>"
+              elem.className = "correlation"
+            }
           }
           else{
             plot.plotEmpty(elem,height,width)
@@ -174,7 +181,7 @@ export const plot ={
     list.forEach((v,i,arr)=>{
       arr.forEach((u,j)=>{
         if(displayFlag[i][j]){
-          if(i!=j){
+          if(i<j){
             const cell = table.getCell(i,j) 
             const x = j>0?[u.x] : [v.y]
             const y = i>0?[v.x] : [u.y]

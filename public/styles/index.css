@@ -223,3 +223,7 @@ ul.optionUL> li > input {
   padding: 0;
   width: 50px;
 }
+
+.correlation {
+  text-align: center;
+}
