@@ -1413,7 +1413,7 @@ returns `function`
 makes and returns linear regression function
 * parameters : type of object, parameters are equal to parameters of linearRegression  
 
-#### `regression.polynominalRegression(x, y, degree)`
+#### `regression.polynomialRegression(x, y, degree)`
 
 returns `object`
 ```javascript
@@ -1426,17 +1426,17 @@ returns `object`
 }
 ```
 
-solve polynominal regression 
+solve polynomial regression 
 * x : type of array  
 * y : type of array
 
 
-#### `regression.polynominalRegressionLoad(parameters)`
+#### `regression.polynomialRegressionLoad(parameters)`
 
 returns `function`
 
-makes and returns polynominal regression function
-* parameters : type of object, parameters are equal to parameters of polynominalRegression  
+makes and returns polynomial regression function
+* parameters : type of object, parameters are equal to parameters of polynomialRegression  
 
 
 
@@ -1589,6 +1589,36 @@ calculate coefficient of determination R2
 * data : type of array
 * ave: type of float, average of data
 * std: type of float, standard of data
+
+#### `statistics.covariance(x, y)`
+
+returns `float`
+
+calculate covariance for variable of x and y 
+* x : type of array
+* y : type of array
+
+#### `statistics.correlationCoefficient(x, y)`
+
+returns `float`
+
+calculate correlation coefficient for variable of x and y 
+* x : type of array
+* y : type of array
+
+#### `statistics.correlationAnalysis(x, y)`
+
+returns `type of double array`
+
+calculate correlation coefficient for variable of x and y 
+* x : type of double array
+* y : type of array
+
+if cor is defined as the return of this function, then
+  cor[0][0] is empty 
+  cor[0][1] is the correlation coefficient of x[i][0] and x[i][1]
+  cor[2][3] is the correlation coefficient of x[i][2] and x[i][3]
+
 
 ### funcs
 ------

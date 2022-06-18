@@ -49,3 +49,77 @@ export const R2 = (x, y, f)=>{
 
   return R2
 }
+
+export const covariance = (x, y) => {
+  const aveX = average(x)
+  const aveY = average(y)
+  const xy = x.map((v,i)=>v*y[i])
+  const aveXY = average(xy)
+  const covariance = aveXY - aveX*aveY
+  return covariance
+}
+
+export const correlationCoefficient = (x, y) => {
+  const covXY = covariance(x,y)
+  const stdX = standard(x)
+  const stdY = standard(y)
+  const correlation = covXY/(stdX*stdY)
+  return correlation
+} 
+
+export const correlationAnalysis = (x) => {
+  const m = x.length
+  const n = x[0].length
+  const aveList = [...Array(n)].fill(0)
+  for(let i=0; i<m; i++){
+    for(let j=0;j<n;j++){
+      aveList[j] += x[i][j]
+    }
+  }
+  for(let j=0;j<n;j++){
+    aveList[j] /= m
+  }
+  const stdList = [...Array(n)].fill(0)
+  for(let i=0;i<m;i++){
+    for(let j=0;j<n;j++){
+      stdList[j] += (x[i][j] - aveList[j])**2
+    }
+  }
+  for(let j=0;j<n;j++){
+    stdList[j] = Math.sqrt(stdList[j])
+  }
+
+  const combination = []
+  for(let j=0;j<n;j++){
+    const list = [...Array(n-1-j)].map((v,k)=>k+j+1)
+    for(let v of list){
+      combination.push([j,v])
+    }
+  }
+  const cml = combination.length
+  const cor = [...Array(cml)].fill(0)
+  for(let i=0;i<m;i++){
+    for(let k=0;k<cml;k++){
+      const [c1, c2] = combination[k]
+      cor[k] += (x[i][c1] - aveList[c1])*(x[i][c2] - aveList[c2])
+    }
+  }
+
+  
+  const correationCoefficient = []
+  for(let k=0;k<cml;k++){
+    const [c1, c2] = combination[k]
+    correationCoefficient[k] = cor[k] /(stdList[c1]*stdList[c2])
+  }
+
+  const corList = [...Array(n)].map(v=>[])
+  for(let k=0;k<cml;k++){
+    const [c1, c2] = combination[k]
+    corList[c1][c2] = correationCoefficient[k] 
+  }
+
+  return corList 
+
+}
+ 
+

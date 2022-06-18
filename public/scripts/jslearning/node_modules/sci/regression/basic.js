@@ -55,7 +55,7 @@ export const multipleRegressionLoad = (parameters)=>{
 
 const makePolyList = (x, degree)=>[...Array(degree)].map((v,i)=>x**(i+1))
 
-const polynominalize = (degree)=>{
+const polynomialize = (degree)=>{
   return list => {
     const data = list.map((v,i)=>makePolyList(v, degree))
     const res =  [].concat(...data)
@@ -63,7 +63,7 @@ const polynominalize = (degree)=>{
   }
 }
 
-export const polynominalRegression = (x, y, degree=1)=>{
+export const polynomialRegression = (x, y, degree=1)=>{
   const x2 = x.map(v=>makePolyList(v, degree))
  
   const X = x2.map(v=>[1,...v])
@@ -83,7 +83,7 @@ export const polynominalRegression = (x, y, degree=1)=>{
   return obj 
 }
 
-export const polynominalRegressionLoad = (parameters)=>{
+export const polynomialRegressionLoad = (parameters)=>{
   const degree = parameters.degree
   const w = parameters.weight
 
