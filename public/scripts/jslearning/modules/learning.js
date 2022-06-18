@@ -1,5 +1,5 @@
 import {model} from "../model.js"
-import * as sciReg from "../node_modules/sci/regression/index.mjs"
+import * as sciReg from "../node_modules/sci/regression/index.js"
 
 "use strict"
 
@@ -18,14 +18,14 @@ export const learning = {
   method:new Map(),
   polyFunc:null,
   linearRegression:function(x, y) {
-    const regression = sciReg.linearRegression(x, y)
+    const regression = sciReg.multipleRegression(x, y)
     return regression
   },
-  polynominalRegression:function(x, y){
-    const options = model.options.get("polynominal")
+  polynomialRegression:function(x, y){
+    const options = model.options.get("polynomial")
     const degree = options.degree
     console.log(degree)
-    const regression = sciReg.polynominalRegression(x, y, degree)
+    const regression = sciReg.polynomialRegression(x, y, degree)
     return regression
   },
   gaussKernelRegression:function(x, y) {
@@ -61,7 +61,7 @@ export const learning = {
 }
 
 learning.method.set("linear", learning.linearRegression)
-learning.method.set("polynominal", learning.polynominalRegression)
+learning.method.set("polynomial", learning.polynomialRegression)
 learning.method.set("gaussKernel", learning.gaussKernelRegression)
 learning.method.set("SVR", learning.SVR)
 learning.method.set("user-function", learning.userFunction)

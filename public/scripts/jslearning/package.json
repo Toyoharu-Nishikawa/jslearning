@@ -11,7 +11,7 @@
   "dependencies": {
     "file-saver": "^2.0.0",
     "plotly.js-dist": "^1.43.2",
-    "sci": "^4.4.1",
+    "sci": "^7.0.1",
     "tabulator-tables": "^4.1.5"
   }
 }

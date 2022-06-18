@@ -4,11 +4,11 @@ import {plot} from "./modules/plot.js"
 import {learning} from "./modules/learning.js"
 import {csvParse,transpose} from "./modules/matrix.js"
 import {importFiles} from "../filereader/index.js"
-import * as statistics from "../sci/statistics/index.mjs"
+import * as statistics from "../sci/statistics/index.js"
 
 "use strict"
 
-const polynominalInitialOption = {
+const polynomialInitialOption = {
   degree: [3, 3, 3],
 }
 
@@ -37,7 +37,7 @@ export const model ={
   regression:null,
   options: new Map([
     ["linear", null],
-    ["polynominal", polynominalInitialOption],
+    ["polynomial", polynomialInitialOption],
     ["gaussKernel", gaussKernelInitialOption],
     ["SVR", SVRInitialOption],
   ]),
@@ -151,10 +151,10 @@ export const model ={
       const dataset= data.dataset
       const displayMode= model.displayMode
       const valueLength = dataset[0].length-1
-      const polynominalParameterList = {
+      const polynomialParameterList = {
         degree: [...Array(valueLength)].fill(3)
       }
-      model.options.set("polynominal", polynominalParameterList)
+      model.options.set("polynomial", polynomialParameterList)
       model.set(labels, dataset, method, displayMode)
  
     }
@@ -174,7 +174,7 @@ export const model ={
     current:"linear",
     list: new Map([
       ["linear", view.elements.linearOption], 
-      ["polynominal", view.elements.polynominalOption], 
+      ["polynomial", view.elements.polynomialOption], 
       ["gaussKernel", view.elements.gaussKernelOption], 
       ["SVR", view.elements.SVROption], 
       ["user-function", view.elements.userfunctionOption], 
@@ -202,7 +202,7 @@ export const model ={
   submit: {
     elemMap: new Map([
       ["linear", view.elements.linearOption], 
-      ["polynominal", view.elements.polynominalOption], 
+      ["polynomial", view.elements.polynomialOption], 
       ["gaussKernel", view.elements.gaussKernelOption], 
       ["SVR", view.elements.SVROption], 
     ]),
@@ -211,14 +211,14 @@ export const model ={
         case "linear":{
           return false
         }
-        case "polynominal": {
+        case "polynomial": {
           const degreesString = values[0]
           const N =model.trainingSet[0].length 
           const degreesTmp = degreesString.split(",").map(v=>parseInt(v))
           const n = degreesTmp.length
           const degrees = [...Array(N)].map((v,i)=>i<n ?
              degreesTmp[i] :degreesTmp[n-1] )
-          const options = model.options.get("polynominal")
+          const options = model.options.get("polynomial")
           const degreesOld = options.degree
           const flag = degrees.every((v,i)=>v==degreesOld[i]) 
           if(flag){

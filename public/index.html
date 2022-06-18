@@ -46,7 +46,7 @@
     <form name="option">
       <select name="method">
         <option value="linear" selected>linear</option>
-        <option value="polynominal">polynominal</option>
+<!--        <option value="polynomial">polynomial</option> -->
         <option value="gaussKernel">gaussKernel</option>
         <option value="SVR">SVR</option>
         <option value="user-function">user function</option>
@@ -54,11 +54,11 @@
     </form>
     <div id="optionTable">
       <div class="linearOption" id="linearOption" style="display:block"></div>
-      <div id="polynominalOption"style="display:none;">
+      <div id="polynomialOption"style="display:none;">
         <ul class="optionUL">
           <li>
             <p>degrees</p>
-            <input id="polynominalInput" type="text" value="3,3,3"> 
+            <input id="polynomialInput" type="text" value="3,3,3"> 
           </li>
         </ul>
       </div>
@@ -115,8 +115,8 @@
     <div id="submit" class="submit">submit</div>
   </article>
 
-  <template id="polynominalTemp">
-    <section class="polynominalTable">
+  <template id="polynomialTemp">
+    <section class="polynomialTable">
       <table>
         <thead>
           <tr>
@@ -130,7 +130,7 @@
     </section>
   </template>
 
-  <template id="polynominalTableBody">
+  <template id="polynomialTableBody">
     <tr>
       <td>value0</td>
       <td>
